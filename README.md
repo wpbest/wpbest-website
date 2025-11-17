@@ -32,6 +32,145 @@ CREATE src/app/app.routes.ts (80 bytes)
 CREATE public/favicon.ico (15086 bytes)  
 CREATE .gemini/GEMINI.md (1983 bytes)  
 
+```bash
+ng add @angular/fire
+```
+✔ Determining Package Manager
+  › Using package manager: npm
+✔ Searching for compatible package version
+  › Found compatible package version: @angular/fire@20.0.1.
+✔ Loading package information from registry
+✔ Confirming installation
+✔ Installing package
+UPDATE package.json (1145 bytes)
+✔ Packages installed successfully.
+? What features would you like to setup? Authentication, Cloud Functions (callable)
+Using firebase-tools version 14.25.0
+? Which Firebase account would you like to use? wpbest@gmail.com
+✔ Preparing the list of your Firebase projects
+? Please select a project: wpbest-website
+✔ Preparing the list of your Firebase WEB apps
+? Please select an app: wpbest-website
+✔ Downloading configuration data of your Firebase WEB app
+UPDATE .gitignore (701 bytes)
+UPDATE src/app/app.config.ts (1028 bytes)
+
++  Created service account github-action-1098403111 with Firebase Hosting admin permissions.
++  Uploaded service account JSON to GitHub as secret FIREBASE_SERVICE_ACCOUNT_WPBEST_WEBSITE.
+i  You can manage your secrets at https://github.com/wpbest/wpbest-website/settings/secrets.
+
+firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\willi\OneDrive\Documents\GitHub\wpbest-website
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+✔ Are you ready to proceed? Yes
+✔ Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to
+confirm your choices. Functions: Configure a Cloud Functions directory and its files, Hosting: Set up deployments for
+static web apps, Emulators: Set up local emulators for Firebase products
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add,
+
+✔ Please select an option: Use an existing project
+✔ Select a default Firebase project for this directory: wpbest-website (wpbest-website)
+
+=== Functions Setup
+Let's create a new codebase for your functions.
+A directory corresponding to the codebase will be created in your project
+with sample code pre-configured.
+
+See https://firebase.google.com/docs/functions/organize-functions for
+more information on organizing your functions using codebases.
+
+Functions can be deployed with firebase deploy.
+
+✔ What language would you like to use to write Cloud Functions? TypeScript
+✔ Do you want to use ESLint to catch probable bugs and enforce style? No
++  Wrote functions/package.json
++  Wrote functions/tsconfig.json
++  Wrote functions/src/index.ts
++  Wrote functions/.gitignore
+✔ Do you want to install dependencies with npm now? Yes
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+
+added 523 packages, and audited 524 packages in 13s
+
+67 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+=== Hosting Setup
+
+Your public directory is the folder (relative to your project directory) that
+will contain Hosting assets to be uploaded with firebase deploy. If you
+have a build process for your assets, use your build's output directory.
+
+✔ What do you want to use as your public directory? dist/wpbest-website/browser
+✔ Configure as a single-page app (rewrite all urls to /index.html)? Yes
+✔ Set up automatic builds and deploys with GitHub? Yes
+
+i  Detected a .git folder at C:\Users\willi\OneDrive\Documents\GitHub\wpbest-website
+i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store.
+
+Visit this URL on this device to log in:
+https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=775518624&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+
+Waiting for authentication...
+
++  Success! Logged into GitHub as wpbest
+
+✔ For which GitHub repository would you like to set up a GitHub workflow? (format: user/repository)
+wpbest/wpbest-website
+
++  Created service account github-action-1098403111 with Firebase Hosting admin permissions.
++  Uploaded service account JSON to GitHub as secret FIREBASE_SERVICE_ACCOUNT_WPBEST_WEBSITE.
+i  You can manage your secrets at https://github.com/wpbest/wpbest-website/settings/secrets.
+
+✔ Set up the workflow to run a build script before every deploy? Yes
+✔ What script should be run before every deploy? npm ci && npm run build
+
++  Created workflow file C:\Users\willi\OneDrive\Documents\GitHub\wpbest-website\.github/workflows/firebase-hosting-pull-request.yml
+✔ Set up automatic deployment to your site's live channel when a PR is merged? Yes
+✔ What is the name of the GitHub branch associated with your site's live channel? main
+
++  Created workflow file C:\Users\willi\OneDrive\Documents\GitHub\wpbest-website\.github/workflows/firebase-hosting-merge.yml
+
+i  Action required: Visit this URL to revoke authorization for the Firebase CLI GitHub OAuth App:
+https://github.com/settings/connections/applications/89cf50f02ac6aaed3484
+i  Action required: Push any new workflow file(s) to your repo
+✔ File dist/wpbest-website/browser/index.html already exists. Overwrite? Yes
++  Wrote dist/wpbest-website/browser/index.html
+
+=== Emulators Setup
+✔ Which Firebase emulators do you want to set up? Press Space to select emulators, then Enter to confirm your choices.
+Authentication Emulator, Functions Emulator, Hosting Emulator
+✔ Which port do you want to use for the auth emulator? 9099
+✔ Which port do you want to use for the functions emulator? 5001
+✔ Which port do you want to use for the hosting emulator? 5000
+✔ Would you like to enable the Emulator UI? Yes
+✔ Which port do you want to use for the Emulator UI (leave empty to use any available port)?
+✔ Would you like to download the emulators now? Yes
+
++  Wrote configuration info to firebase.json
++  Wrote project information to .firebaserc
+
++  Firebase initialization complete!
 
 ## Development server
 
