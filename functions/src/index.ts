@@ -9,8 +9,8 @@ const geminiApiKey = defineSecret("GEMINI_API_KEY");
 export const invokeLLM = onRequest(
   {
     timeoutSeconds: 300,
-    cors: true,             // Allow all origins (your current goal)
-    secrets: [geminiApiKey] // Load API key securely
+    cors: true,
+    secrets: [geminiApiKey]
   },
   async (req, res) => {
     try {
@@ -32,7 +32,7 @@ export const invokeLLM = onRequest(
       );
 
       res.status(200).json(await response.json());
-    } catch (err: unknown) {
+    } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       console.error("LLM error:", message);
       res.status(500).json({ error: message });
