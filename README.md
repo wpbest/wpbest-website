@@ -178,6 +178,32 @@ https://aistudio.google.com/app/projects
 ## Create Gemini API Key
 https://aistudio.google.com/app/api-keys
 
+## Create a Firebase Functions Secretes (Sample API Key)
+```bash
+echo "AIzaSyDNOwL8XJPuqtJS6Gj1h_Bs-RgeUUaXkH4" | firebase functions:secrets:set GEMINI_API_KEY --data-file=- --project wpbest-website
+```
+
+```bash
+npm install --save firebase-functions@latest
+```
+```bash
+npm install --save firebase-admin@latest
+```
+
+Build the firebase functions
+```bash
+cd functions
+npm install
+npm run build   
+```
+
+```bash
+npm run build --prefix functions
+```
+
+# Deploy Firebase Fuctions
+firebase deploy --only functions
+
 ## Development server
 
 To start a local development server, run:
