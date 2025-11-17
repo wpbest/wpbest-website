@@ -172,6 +172,12 @@ Authentication Emulator, Functions Emulator, Hosting Emulator
 
 +  Firebase initialization complete!
 
+## Import Projects
+https://aistudio.google.com/app/projects
+
+## Create Gemini API Key
+https://aistudio.google.com/app/api-keys
+
 ## Development server
 
 To start a local development server, run:
