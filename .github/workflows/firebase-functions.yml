@@ -14,7 +14,7 @@ jobs:
       - name: Install Dependencies
         run: npm --prefix functions ci
       - name: Deploy Firebase Functions
-        uses: w9jds/firebase-action@v13.3.1
+        uses: w9jds/firebase-action@v13.8.0
         with:
           args: deploy --only functions
         env:
