@@ -2,6 +2,13 @@
 wpbest-website is a repository that contains the source code for http://wpbest.org, the official website for William Paul Best. The site showcases his 40+ years of experience as a Computer Scientist and Mathematician in Artificial Intelligence and promotes his YouTube channel 'wpbest'.
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
 
+
+Restore Git Repository to a specified commit
+```bash
+git reset --hard abc1234
+git push origin HEAD --force
+```
+
 ```bash
  ng new wpbest-website --routing --style scss --skip-install --skip-git --strict --skip-tests
  ```
