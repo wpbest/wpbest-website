@@ -12,6 +12,11 @@ git reset --hard abc1234
 git push origin HEAD --force
 ```
 
+Firebase MCP Server
+https://firebase.blog/posts/2025/10/firebase-mcp-server-ga
+
+gemini extensions install https://github.com/gemini-cli-extensions/firebase
+
 ```bash
  ng new wpbest-website --routing --style scss --skip-install --skip-git --strict --skip-tests
  ```
