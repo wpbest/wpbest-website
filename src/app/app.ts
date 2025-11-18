@@ -1,9 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-import { FirebaseSecrets } from './firebase-secrets';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
+import { RouterOutlet } from '@angular/router';
+import { FirebaseSecrets } from './firebase-secrets';
 
 enum UIMode {
   Default,
@@ -15,26 +15,27 @@ enum UIMode {
   selector: 'app-root',
   imports: [RouterOutlet, FormsModule, HttpClientModule, CommonModule], // Removed HttpClientModule, added FormsModule
   templateUrl: './app.html',
-  styleUrl: './app.scss'
+  styleUrl: './app.scss',
 })
 export class App {
   protected readonly UIMode = UIMode; // Expose enum to template
   protected currentMode = signal(UIMode.Default);
   protected inputText = signal('');
   protected isVoiceModeEnabled = signal(false);
-  protected chatMessages = signal<Array<{ type: 'user' | 'assistant', text: string }>>([]);
+  protected chatMessages = signal<Array<{ type: 'user' | 'assistant'; text: string }>>([]);
   protected isTyping = signal(false);
   protected isMicMuted = signal(false); // New signal for microphone mute state
   private recognition: any;
-  protected readonly error = signal<unknown | undefined>(undefined);  
+  protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
 
   private secrets = inject(FirebaseSecrets);
-  private http = inject(HttpClient); 
+  private http = inject(HttpClient);
 
   constructor() {
     if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const SpeechRecognition =
+        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognition) {
         this.recognition = new SpeechRecognition();
         this.recognition.continuous = true;
@@ -81,11 +82,9 @@ export class App {
 
   sendMessage() {
     if (this.inputText().trim()) {
-      let prompt:string = this.inputText();
+      let prompt: string = this.inputText();
       this.chatMessages.update((messages: any) => [...messages, { type: 'user', text: prompt }]);
-      this.isTyping.set(true);
       this.invokeLLM(prompt);
-      this.isTyping.set(false);
       this.inputText.set('');
     }
   }
@@ -123,7 +122,10 @@ export class App {
   private simulateAssistantResponse() {
     this.isTyping.set(true);
     setTimeout(() => {
-      this.chatMessages.update((messages: any) => [...messages, { type: 'assistant', text: 'This is a mocked assistant response.' }]);
+      this.chatMessages.update((messages: any) => [
+        ...messages,
+        { type: 'assistant', text: 'This is a mocked assistant response.' },
+      ]);
       this.isTyping.set(false);
     }, 3000);
   }
@@ -132,11 +134,11 @@ export class App {
     // Removed simulated incoming messages functionality as requested.
     // This method will now only manage the voice mode state without adding chat messages.
   }
-protected async invokeLLM (prompt: string)
-{
+  protected async invokeLLM(prompt: string) {
+    this.isTyping.set(true);
     this.error.set(undefined);
     console.log('=== Test Button Clicked ===');
-    
+
     console.log('prompt:', prompt);
 
     try {
@@ -161,20 +163,24 @@ protected async invokeLLM (prompt: string)
       // Final processed logging
       const output = result?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(result);
 
-      this.chatMessages.update((messages: any) => [...messages, { type: 'assistant', text: output }]);
-
+      this.chatMessages.update((messages: any) => [
+        ...messages,
+        { type: 'assistant', text: output },
+      ]);
+      this.isTyping.set(false);
       console.log('LLM Output:', output);
-
+      this.isTyping.set(false);
     } catch (err) {
+      this.isTyping.set(false);
       console.error('invokeLLM ERROR:', err);
       this.error.set(err);
     } finally {
+      this.isTyping.set(false);
       console.log('=== Test Button Completed ===');
     }
-}
-protected async testCode() {
+  }
+  protected async testCode() {
     const prompt = 'Hello Gemini Flash Lite 2.5. This is a test.';
     this.invokeLLM(prompt);
-}
-
+  }
 }
