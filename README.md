@@ -43,6 +43,32 @@ CREATE public/favicon.ico (15086 bytes)
 CREATE .gemini/GEMINI.md (1983 bytes)  
 
 ```bash
+ng add @angular/pwa
+```
+✔ Determining Package Manager
+  › Using package manager: npm
+✔ Searching for compatible package version
+  › Found compatible package version: @angular/pwa@20.3.10.
+✔ Loading package information from registry
+✔ Confirming installation
+✔ Installing package in temporary location
+CREATE ngsw-config.json (669 bytes)
+CREATE public/manifest.webmanifest (1292 bytes)
+CREATE public/icons/icon-128x128.png (2875 bytes)
+CREATE public/icons/icon-144x144.png (3077 bytes)
+CREATE public/icons/icon-152x152.png (3293 bytes)
+CREATE public/icons/icon-192x192.png (4306 bytes)
+CREATE public/icons/icon-384x384.png (11028 bytes)
+CREATE public/icons/icon-512x512.png (16332 bytes)
+CREATE public/icons/icon-72x72.png (1995 bytes)
+CREATE public/icons/icon-96x96.png (2404 bytes)
+UPDATE angular.json (3225 bytes)
+UPDATE package.json (1187 bytes)
+UPDATE src/app/app.config.ts (1312 bytes)
+UPDATE src/index.html (448 bytes)
+✔ Packages installed successfully.
+
+```bash
 ng add @angular/fire
 ```
 ✔ Determining Package Manager
