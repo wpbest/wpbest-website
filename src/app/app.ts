@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
-import removeMd from 'remove-markdown';
+import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule
+import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
 import { decode } from 'he';
+import removeMd from 'remove-markdown';
+import { ACCURA_AI_PROMPT } from './accura-ai-prompt';
 import { FirebaseSecrets } from './firebase-secrets';
 import { MarkdownPipe } from './markdown.pipe';
-import { ACCURA_AI_PROMPT } from './accura-ai-prompt';
 
 enum UIMode {
   Default,
@@ -15,17 +17,17 @@ enum UIMode {
 }
 
 export function cleanTextForTTS(input: string): string {
-  if (!input) return "";
+  if (!input) return '';
 
-  let s = removeMd(input);   // Remove bold/italic/markdown
-  s = decode(s);             // Decode HTML entities
-  s = s.replace(/\*/g, "");  // Remove any remaining literal asterisks
+  let s = removeMd(input); // Remove bold/italic/markdown
+  s = decode(s); // Decode HTML entities
+  s = s.replace(/\*/g, ''); // Remove any remaining literal asterisks
   return s.trim();
 }
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, CommonModule, MarkdownPipe], // Removed HttpClientModule, added FormsModule
+  imports: [FormsModule, CommonModule, MarkdownPipe, MatButtonModule, MatIconModule], // Removed HttpClientModule, added FormsModule
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -64,7 +66,10 @@ export class App {
           if (this.currentMode() === UIMode.Dictate) {
             this.inputText.set(final_transcript + interim_transcript);
           } else if (this.currentMode() === UIMode.Voice && final_transcript.trim().length > 0) {
-            this.chatMessages.update((messages: any) => [...messages, { type: 'user', text: final_transcript }]);
+            this.chatMessages.update((messages: any) => [
+              ...messages,
+              { type: 'user', text: final_transcript },
+            ]);
             this.invokeLLM(final_transcript);
             this.inputText.set('');
           }
@@ -86,7 +91,7 @@ export class App {
   }
 
   playSpeech(text: string): void {
-    this.secrets.getSpeech(text).subscribe(data => {
+    this.secrets.getSpeech(text).subscribe((data) => {
       const blob = new Blob([data], { type: 'audio/mp3' });
       const url = window.URL.createObjectURL(blob);
       const audio = new Audio(url);
@@ -172,7 +177,7 @@ export class App {
           body: JSON.stringify({
             data: {
               text: prompt,
-              systemInstruction: ACCURA_AI_PROMPT
+              systemInstruction: ACCURA_AI_PROMPT,
             },
           }),
         }
