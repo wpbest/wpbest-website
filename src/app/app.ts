@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule
 import removeMd from 'remove-markdown';
 import { decode } from 'he';
 import { FirebaseSecrets } from './firebase-secrets';
+import { MarkdownPipe } from './markdown.pipe';
 
 enum UIMode {
   Default,
@@ -23,7 +24,7 @@ export function cleanTextForTTS(input: string): string {
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, CommonModule], // Removed HttpClientModule, added FormsModule
+  imports: [FormsModule, CommonModule, MarkdownPipe], // Removed HttpClientModule, added FormsModule
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -91,7 +92,7 @@ export class App {
       audio.play();
     });
   }
-  
+
   startDictateMode() {
     if (this.recognition) {
       this.currentMode.set(UIMode.Dictate);
@@ -151,7 +152,7 @@ export class App {
     this.isMicMuted.set(false); // Reset mute state when exiting voice mode
     this.chatMessages.set([]); // Clear chat messages when cancelling voice mode
     if (this.recognition) {
-        this.recognition.stop();
+      this.recognition.stop();
     }
   }
 

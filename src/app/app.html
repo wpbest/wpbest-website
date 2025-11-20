@@ -1,76 +1,109 @@
 <main class="main-container">
   <div class="chat-area">
     @for (message of chatMessages(); track $index) {
-      <div class="chat-bubble" [class.user]="message.type === 'user'" [class.assistant]="message.type === 'assistant'">
-        {{ message.text }}
-      </div>
+    <div class="chat-bubble" [class.user]="message.type === 'user'" [class.assistant]="message.type === 'assistant'"
+      [innerHTML]="message.text | markdown">
+    </div>
     }
     @if (isTyping()) {
-      <div class="chat-bubble assistant typing-indicator">
-        <span></span><span></span><span></span>
-      </div>
+    <div class="chat-bubble assistant typing-indicator">
+      <span></span><span></span><span></span>
+    </div>
     }
   </div>
 
   <div class="input-controls">
     @if (currentMode() === UIMode.Default) {
-      <div class="title">What can I help with?</div>
-      <div class="input-bar">
-        <button class="icon-button attachment-button" title="Add files and more">+</button>
-        <input type="text" placeholder="Ask anything" [(ngModel)]="inputText" class="text-input" (keydown.enter)="sendMessage()">
-        <button class="icon-button mic-button" (click)="startDictateMode()" title="Dictate">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.53-2.64 6.43-6 6.92V21h-2v-3.08c-3.36-.49-6-3.39-6-6.92h2c0 2.76 2.24 5 5 5s5-2.24 5-5h2z"/></svg>
-        </button>
-        <button class="icon-button voice-wave-button" (click)="toggleVoiceMode()" title="Use voice mode">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M6 18h4V6H6v12zm5-12v12h4V6h-4zm5 0v12h4V6h-4z"/></svg>
-        </button>
-        <button class="icon-button send-button" (click)="sendMessage()" title="Send">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
-        <button class="icon-button test-button" (click)="testCode()" title="Test">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M16 1H8C6.34315 1 5 2.34315 5 4V20C5 21.6569 6.34315 23 8 23H16C17.6569 23 19 21.6569 19 20V4C19 2.34315 17.6569 1 16 1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M10 9L14 13L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 5H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
+    <div class="title">What can I help with?</div>
+    <div class="input-bar">
+      <button class="icon-button attachment-button" title="Add files and more">+</button>
+      <input type="text" placeholder="Ask anything" [(ngModel)]="inputText" class="text-input"
+        (keydown.enter)="sendMessage()">
+      <button class="icon-button mic-button" (click)="startDictateMode()" title="Dictate">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.53-2.64 6.43-6 6.92V21h-2v-3.08c-3.36-.49-6-3.39-6-6.92h2c0 2.76 2.24 5 5 5s5-2.24 5-5h2z" />
+        </svg>
+      </button>
+      <button class="icon-button voice-wave-button" (click)="toggleVoiceMode()" title="Use voice mode">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M6 18h4V6H6v12zm5-12v12h4V6h-4zm5 0v12h4V6h-4z" />
+        </svg>
+      </button>
+      <button class="icon-button send-button" (click)="sendMessage()" title="Send">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+        </svg>
+      </button>
+      <button class="icon-button test-button" (click)="testCode()" title="Test">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M16 1H8C6.34315 1 5 2.34315 5 4V20C5 21.6569 6.34315 23 8 23H16C17.6569 23 19 21.6569 19 20V4C19 2.34315 17.6569 1 16 1Z"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M10 9L14 13L18 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <path d="M9 5H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
     } @else if (currentMode() === UIMode.Dictate) {
-            <div class="input-bar dictate-mode">
-              <input type="text" [(ngModel)]="inputText" class="text-input" readonly>
-              <button class="icon-button" (click)="acceptDictation()" title="Accept">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-              </button>
-              <button class="icon-button" (click)="cancelDictation()" title="Cancel">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-              </button>
-            </div>
+    <div class="input-bar dictate-mode">
+      <input type="text" [(ngModel)]="inputText" class="text-input" readonly>
+      <button class="icon-button" (click)="acceptDictation()" title="Accept">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+        </svg>
+      </button>
+      <button class="icon-button" (click)="cancelDictation()" title="Cancel">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+        </svg>
+      </button>
+    </div>
     } @else if (currentMode() === UIMode.Voice) {
-      <div class="voice-mode-display">
-        <div class="voice-mic-container">
-          <div class="pulsing-circle"></div>
-          <div class="progress-ring"></div>
-          <div class="voice-controls">
-            <button class="icon-button" (click)="toggleMicMute()">
-              @if (isMicMuted()) {
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.53-2.64 6.43-6 6.92V21h-2v-3.08c-3.36-.49-6-3.39-6-6.92h2c0 2.76 2.24 5 5 5s5-2.24 5-5h2zM12 17c-1.35 0-2.6-.35-3.7-.96l6.05 6.05c.39-.28.76-.59 1.1-.93L12 17zM4.27 3L3 4.27l9 9V14c1.66 0 2.99-1.34 2.99-3 .01-.07.01-.13.01-.2l1.58 1.58c-.1.3-.23.58-.38.84l1.83 1.83c.6-.93.99-2.03.99-3.25h-2c0 1.05-.34 2.02-.92 2.8L21 22.73 19.73 24 12 16.27 4.27 3z"/></svg>
-              } @else {
-                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.53-2.64 6.43-6 6.92V21h-2v-3.08c-3.36-.49-6-3.39-6-6.92h2c0 2.76 2.24 5 5 5s5-2.24 5-5h2z"/></svg>
-              }
-            </button>
-            <button class="icon-button" (click)="cancelVoiceMode()">
-              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="voice-status">
-          @if (isMicMuted()) {
-            Microphone Muted
-          } @else {
-            Listening...
-          }
+    <div class="voice-mode-display">
+      <div class="voice-mic-container">
+        <div class="pulsing-circle"></div>
+        <div class="progress-ring"></div>
+        <div class="voice-controls">
+          <button class="icon-button" (click)="toggleMicMute()">
+            @if (isMicMuted()) {
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.53-2.64 6.43-6 6.92V21h-2v-3.08c-3.36-.49-6-3.39-6-6.92h2c0 2.76 2.24 5 5 5s5-2.24 5-5h2zM12 17c-1.35 0-2.6-.35-3.7-.96l6.05 6.05c.39-.28.76-.59 1.1-.93L12 17zM4.27 3L3 4.27l9 9V14c1.66 0 2.99-1.34 2.99-3 .01-.07.01-.13.01-.2l1.58 1.58c-.1.3-.23.58-.38.84l1.83 1.83c.6-.93.99-2.03.99-3.25h-2c0 1.05-.34 2.02-.92 2.8L21 22.73 19.73 24 12 16.27 4.27 3z" />
+            </svg>
+            } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3.53-2.64 6.43-6 6.92V21h-2v-3.08c-3.36-.49-6-3.39-6-6.92h2c0 2.76 2.24 5 5 5s5-2.24 5-5h2z" />
+            </svg>
+            }
+          </button>
+          <button class="icon-button" (click)="cancelVoiceMode()">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            </svg>
+          </button>
         </div>
       </div>
+      <div class="voice-status">
+        @if (isMicMuted()) {
+        Microphone Muted
+        } @else {
+        Listening...
+        }
+      </div>
+    </div>
     }
   </div>
 </main>
