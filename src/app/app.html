@@ -57,6 +57,15 @@
           <button class="icon-button" (click)="toggleMicMute()">
             <mat-icon>{{ isMicMuted() ? 'mic_off' : 'mic' }}</mat-icon>
           </button>
+          @if (isAudioPlaying()) {
+          <button class="icon-button" (click)="toggleAudioPlayback()"
+            [title]="isAudioPaused() ? 'Resume Audio' : 'Pause Audio'">
+            <mat-icon>{{ isAudioPaused() ? 'play_arrow' : 'pause' }}</mat-icon>
+          </button>
+          <button class="icon-button" (click)="stopAudio()" title="Stop Audio">
+            <mat-icon>stop</mat-icon>
+          </button>
+          }
           <button class="icon-button" (click)="cancelVoiceMode()">
             <mat-icon>close</mat-icon>
           </button>
