@@ -50,7 +50,7 @@ export class App {
   private secrets = inject(FirebaseSecrets);
   private http = inject(HttpClient);
   private aiService = inject(AiService);
-  
+
   constructor() {
     if (typeof window !== 'undefined') {
       const SpeechRecognition =
@@ -88,11 +88,11 @@ export class App {
           console.error('Speech recognition error', event.error);
         };
         this.recognition.onend = () => {
-          // Only set to Default if voice mode is not enabled, otherwise, recognition might restart
+          // Reset to Default when voice mode is disabled
           if (!this.isVoiceModeEnabled()) {
             this.currentMode.set(UIMode.Default);
-          } else {
-            // If in voice mode and recognition ends, restart it automatically
+          } else if (this.shouldRestartRecognition && !this.isMicMuted()) {
+            // Restart only when auto‑restart allowed and mic not muted
             this.recognition.start();
           }
         };
@@ -101,7 +101,7 @@ export class App {
   }
 
   playSpeech(text: string): void {
-    // Stop any currently playing audio
+    // Ensure any previous audio is stopped
     this.stopAudio();
 
     this.secrets.getSpeech(text).subscribe((data) => {
@@ -110,22 +110,34 @@ export class App {
       const audio = new Audio(url);
       this.currentAudio = audio;
 
+      const resumeRecognition = () => {
+        if (this.currentMode() === UIMode.Voice && this.recognition && !this.isMicMuted()) {
+          this.recognition.start();
+          this.shouldRestartRecognition = true;
+        }
+      };
+
       audio.onplay = () => {
         this.isAudioPlaying.set(true);
         this.isAudioPaused.set(false);
+        // Mute mic while assistant speaks
+        if (this.currentMode() === UIMode.Voice && this.recognition) {
+          this.recognition.stop();
+          this.shouldRestartRecognition = false;
+        }
       };
-      audio.onpause = () => {
-        this.isAudioPaused.set(true);
-      };
+      audio.onpause = () => this.isAudioPaused.set(true);
       audio.onended = () => {
         this.isAudioPlaying.set(false);
         this.isAudioPaused.set(false);
         this.currentAudio = null;
+        resumeRecognition();
       };
       audio.onerror = () => {
         this.isAudioPlaying.set(false);
         this.isAudioPaused.set(false);
         this.currentAudio = null;
+        resumeRecognition();
       };
 
       audio.play();
@@ -205,9 +217,18 @@ export class App {
     }
   }
 
-  toggleMicMute() {
-    this.isMicMuted.update((value: any) => !value);
-    // This function now only manages the mute state.
+  toggleMicMute(): void {
+    const nowMuted = !this.isMicMuted();
+    this.isMicMuted.set(nowMuted);
+    if (this.currentMode() === UIMode.Voice && this.recognition) {
+      if (nowMuted) {
+        this.recognition.stop();
+        this.shouldRestartRecognition = false;
+      } else {
+        this.recognition.start();
+        this.shouldRestartRecognition = true;
+      }
+    }
   }
 
   cancelVoiceMode() {
