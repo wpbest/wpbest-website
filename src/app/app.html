@@ -71,7 +71,15 @@
           </button>
         </div>
       </div>
-      <div class="voice-status">@if (isMicMuted()) { Microphone Muted } @else { Listening... }</div>
+      <div class="voice-status">
+        @if (isAudioPlaying() && !isAudioPaused()) {
+        Speaking...
+        } @else if (isMicMuted()) {
+        Microphone Muted
+        } @else {
+        Listening...
+        }
+      </div>
     </div>
     }
   </div>
