@@ -1,5 +1,5 @@
 <main class="main-container">
-  <div class="chat-area">
+  <div class="chat-area" #chatArea>
     @for (message of chatMessages(); track $index) {
     <div class="chat-bubble" [class.user]="message.type === 'user'" [class.assistant]="message.type === 'assistant'"
       [innerHTML]="message.text | markdown"></div>
