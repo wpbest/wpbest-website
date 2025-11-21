@@ -44,6 +44,7 @@ export class App {
   protected isAudioPaused = signal(false); // Signal for audio paused state
   private currentAudio: HTMLAudioElement | null = null; // Reference to current audio
   private recognition: any;
+  private shouldRestartRecognition = true; // Flag to control auto-restart of recognition
   protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
   private secrets = inject(FirebaseSecrets);
@@ -226,46 +227,32 @@ export class App {
     this.error.set(undefined);
     console.log('=== Test Button Clicked ===');
     console.log('prompt:', prompt);
-    try {
-      console.log('Calling Firebase invokeLLM function...');
-      const response = await fetch(
-        'https://us-central1-wpbest-website.cloudfunctions.net/invokeLLM',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            data: {
-              text: prompt,
-              systemInstruction: ACCURA_AI_PROMPT,
-            },
-          }),
-        }
-      );
-      console.log('HTTP Status:', response.status);
-      const result = await response.json();
-      console.log('LLM Raw Response:', result);
-      const output = result?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(result);
-      this.chatMessages.update((messages: any) => [
-        ...messages,
-        { type: 'assistant', text: output },
-      ]);
-      requestAnimationFrame(() => {
-        const chatArea = document.querySelector('.chat-area');
-        if (chatArea) chatArea.scrollTop = chatArea.scrollHeight;
+
+    console.log('Calling AiService invokeLLM function...');
+    this.aiService
+      .invokeLLM(prompt)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (output) => {
+          this.chatMessages.update((messages: any) => [
+            ...messages,
+            { type: 'assistant', text: output },
+          ]);
+          let cleanedText = cleanTextForTTS(output);
+          this.playSpeech(cleanedText);
+          this.isTyping.set(false);
+          console.log('LLM Output:', output);
+        },
+        error: (err) => {
+          this.isTyping.set(false);
+          console.error('invokeLLM ERROR:', err);
+          this.error.set(err);
+          console.log('=== Test Button Completed (Error) ===');
+        },
+        complete: () => {
+          console.log('=== Test Button Completed ===');
+        },
       });
-      let cleanedText = cleanTextForTTS(output);
-      this.playSpeech(cleanedText);
-      this.isTyping.set(false);
-      console.log('LLM Output:', output);
-      this.isTyping.set(false);
-    } catch (err) {
-      this.isTyping.set(false);
-      console.error('invokeLLM ERROR:', err);
-      this.error.set(err);
-    } finally {
-      this.isTyping.set(false);
-      console.log('=== Test Button Completed ===');
-    }
   }
 
   protected async testCode() {
