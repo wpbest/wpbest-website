@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { MatButtonModule } from '@angular/material/button'; // Import MatButtonModule
 import { MatIconModule } from '@angular/material/icon'; // Import MatIconModule
 import { decode } from 'he';
 import removeMd from 'remove-markdown';
-import { ACCURA_AI_PROMPT } from './accura-ai-prompt';
+import { AiService } from './ai.service';
 import { FirebaseSecrets } from './firebase-secrets';
 import { MarkdownPipe } from './markdown.pipe';
+
 
 enum UIMode {
   Default,
@@ -43,6 +45,7 @@ export class App {
   protected readonly error = signal<unknown | undefined>(undefined);
   protected readonly geminiKey = signal<string | undefined>(undefined);
   private secrets = inject(FirebaseSecrets);
+  private aiService = inject(AiService);
   private http = inject(HttpClient);
 
   constructor() {
@@ -162,47 +165,39 @@ export class App {
     }
   }
 
-  protected async invokeLLM(prompt: string) {
+  private destroyRef = inject(DestroyRef);
+
+  protected invokeLLM(prompt: string) {
     this.isTyping.set(true);
     this.error.set(undefined);
     console.log('=== Test Button Clicked ===');
     console.log('prompt:', prompt);
-    try {
-      console.log('Calling Firebase invokeLLM function...');
-      const response = await fetch(
-        'https://us-central1-wpbest-website.cloudfunctions.net/invokeLLM',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            data: {
-              text: prompt,
-              systemInstruction: ACCURA_AI_PROMPT,
-            },
-          }),
-        }
-      );
-      console.log('HTTP Status:', response.status);
-      const result = await response.json();
-      console.log('LLM Raw Response:', result);
-      const output = result?.candidates?.[0]?.content?.parts?.[0]?.text ?? JSON.stringify(result);
-      this.chatMessages.update((messages: any) => [
-        ...messages,
-        { type: 'assistant', text: output },
-      ]);
-      let cleanedText = cleanTextForTTS(output);
-      this.playSpeech(cleanedText);
-      this.isTyping.set(false);
-      console.log('LLM Output:', output);
-      this.isTyping.set(false);
-    } catch (err) {
-      this.isTyping.set(false);
-      console.error('invokeLLM ERROR:', err);
-      this.error.set(err);
-    } finally {
-      this.isTyping.set(false);
-      console.log('=== Test Button Completed ===');
-    }
+
+    console.log('Calling AiService invokeLLM function...');
+    this.aiService
+      .invokeLLM(prompt)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (output) => {
+          this.chatMessages.update((messages: any) => [
+            ...messages,
+            { type: 'assistant', text: output },
+          ]);
+          let cleanedText = cleanTextForTTS(output);
+          this.playSpeech(cleanedText);
+          this.isTyping.set(false);
+          console.log('LLM Output:', output);
+        },
+        error: (err) => {
+          this.isTyping.set(false);
+          console.error('invokeLLM ERROR:', err);
+          this.error.set(err);
+          console.log('=== Test Button Completed (Error) ===');
+        },
+        complete: () => {
+          console.log('=== Test Button Completed ===');
+        },
+      });
   }
 
   protected async testCode() {
