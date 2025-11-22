@@ -2,6 +2,25 @@
 wpbest-website is a repository that contains the source code for http://wpbest.org, the official website for William Paul Best. The site showcases his 40+ years of experience as a Computer Scientist and Mathematician in Artificial Intelligence and promotes his YouTube channel 'wpbest'.
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.10.
 
+## Documentation
+
+[Node.js](https://nodejs.org/en/docs/)
+
+[Angular](https://angular.dev/)
+
+[Angular CLI](https://cli.angular.io/)
+
+[Angular Style Guide](https://angular.io/guide/styleguide)
+
+[RxJS](https://rxjs-dev.firebaseapp.com/)
+
+[Firebase](https://firebase.google.com/docs/)
+
+[Firebase CLI](https://firebase.google.com/docs/cli/)
+
+[AngularFire](https://github.com/angular/angularfire)
+
+
 # Developemnt Environment
 GitHub: wpbest      Gmail:wpbest@gmail.com
 GitHub: senshi111   GMail:banenicovic@gmail.com
@@ -17,6 +36,26 @@ git push origin HEAD --force
 nvm list
 nvm install 22.21.1
 nvm use 22.21.1
+```
+
+## Install NPM Check Updates
+
+### NPM
+```
+npm install -g npm-check-updates
+```
+
+At times, the package.json file can get out of date from what is current. To check for outdated packages install npm-check-updates, run ncu to see outdated packages, and then run ncu -u to update the packages.
+
+```bash
+ncu
+ncu -u
+npm install
+```
+
+## Clear NPM Cache
+```bash
+npm cache clean --force
 ```
 
 ## Install Angular
