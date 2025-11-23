@@ -58,9 +58,14 @@ npm install
 npm cache clean --force
 ```
 
-## Install Angular
+## Install Angular lastest 21
 ```bash
 npm install -g @angular/cli
+```
+
+## Install Angular 20
+```bash
+npm install -g @angular/cli@20
 ```
 
 ## Install Firebase Tools and CLI
