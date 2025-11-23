@@ -10,6 +10,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AiService } from './ai.service';
 import { FirebaseSecrets } from './firebase-secrets';
 import { MarkdownPipe } from './markdown.pipe';
+import * as pdfjsLib from 'pdfjs-dist';
+import * as mammoth from 'mammoth';
 
 enum UIMode {
   Default,
@@ -52,6 +54,7 @@ export class App {
   private aiService = inject(AiService);
 
   constructor() {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjsLib.version}/build/pdf.worker.mjs`;
     if (typeof window !== 'undefined') {
       const SpeechRecognition =
         (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -185,13 +188,22 @@ export class App {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        console.log('File loaded:', file.name, e.target.result);
-      };
-      reader.readAsText(file);
+    if (!file) {
+      return;
     }
+
+    this.isTyping.set(true);
+    this.extractTextFromFile(file)
+      .then(text => {
+        const prompt = "Summarize and explain this document:\n" + text;
+        this.chatMessages.update((messages: any) => [...messages, { type: 'user', text: `[Uploaded File: ${file.name}]` }]);
+        this.invokeLLM(prompt);
+      })
+      .catch(error => {
+        console.error('Error extracting text:', error);
+        this.error.set(error);
+        this.isTyping.set(false);
+      });
   }
 
   sendMessage() {
@@ -254,6 +266,47 @@ export class App {
   }
 
   private destroyRef = inject(DestroyRef);
+
+  private async extractTextFromFile(file: File): Promise<string> {
+    switch (file.type) {
+      case 'text/plain':
+        return this.readTextFile(file);
+      case 'application/pdf':
+        return this.readPdfFile(file);
+      case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+        return this.readDocxFile(file);
+      default:
+        this.isTyping.set(false);
+        throw new Error(`Unsupported file type: ${file.type}`);
+    }
+  }
+
+  private readTextFile(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsText(file);
+    });
+  }
+
+  private async readPdfFile(file: File): Promise<string> {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+    let text = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(item => (item as any).str).join(' ');
+    }
+    return text;
+  }
+
+  private async readDocxFile(file: File): Promise<string> {
+    const arrayBuffer = await file.arrayBuffer();
+    const result = await mammoth.extractRawText({ arrayBuffer });
+    return result.value;
+  }
 
   protected invokeLLM(prompt: string) {
     this.isTyping.set(true);
