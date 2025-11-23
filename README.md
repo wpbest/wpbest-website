@@ -34,8 +34,8 @@ git push origin HEAD --force
 ## install Node JS
 ```bash
 nvm list
-nvm install 22.21.1
-nvm use 22.21.1
+nvm install 20.19.5
+nvm use 20.19.5
 ```
 
 ## Install NPM Check Updates
