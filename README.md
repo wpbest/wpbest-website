@@ -24,6 +24,7 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 # Developemnt Environment
 GitHub: wpbest      Gmail:wpbest@gmail.com
 GitHub: senshi111   GMail:banenicovic@gmail.com
+GitHub: nirnlore    GMail:nirnlore@gmail.com
 
 Restore Git Repository to a specified commit
 ```bash
