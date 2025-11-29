@@ -365,6 +365,9 @@ i  Install the Data Connect VS Code Extensions. You can explore Data Connect Que
 ## Data Connect Example 
 [Build with Firebase Data Connect](https://firebase.google.com/codelabs/firebase-dataconnect-web?authuser=0&_gl=1*8mcd8n*_ga*NTA3MTUyNDg0LjE3NjI4MTY5NTU.*_ga_CW55HF8NVT*czE3NjQwNzQxMDYkbzQ2JGcxJHQxNzY0MDc0NDA1JGo1MiRsMCRoMA..#10)
 
+## Google Cloud Platform (Vertex AI Dashboard)
+[Vertex AI Dashboard for wpbest-website](https://console.cloud.google.com/vertex-ai/dashboard?project=wpbest-website)
+
 ## Start Emulators
 ```bash
 firebase emulators:start --project wpbest-website
